@@ -23,10 +23,16 @@ else
 		log "Ошибка при остановке tomcat"
 		exit
 	fi
+	cd /opt/alfresco-4.2.f/
+	tar cfz /backup/files/$(date +"%y-%m-%d_%T").tar.gz ./alf_data
+	if [[ $? != 0 ]]; then
+		log "Ошибка при копировании каталогов"
+		exit
+	fi
 	log "Запуск tomcat"
 	/opt/alfresco-4.2.f/alfresco.sh start tomcat
 	if [[ $? != 0 ]]; then
-		log "Ошибка при запуск tomcat"
+		log "Ошибка при запуске tomcat"
 		exit
 	fi	
 fi	
