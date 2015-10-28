@@ -17,6 +17,11 @@ function main
 if [[ $STATUS != 0 ]]; then
 	log "Произошла ошибка! Бэкап не удался"
 else
+	cat /123
+	if [[ $? != 0 ]]; then
+		log "тест ошибки"
+		exit
+	fi	
 	log "Остановка tomcat"
 	/opt/alfresco-4.2.f/alfresco.sh stop tomcat
 	if [[ $? != 0 ]]; then
