@@ -35,6 +35,7 @@ else
 	
 	log "Выгрузка базы"
 	/opt/alfresco-4.2.f/postgresql/bin/pg_dump -w alfresco> /backup/sql/$(date +"%y-%m-%d_%H-%M-%S").sql
+
 	if [[ $? != 0 ]]; then
 		log "Ошибка при копировании бызы"
 		exit
