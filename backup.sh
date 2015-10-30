@@ -1,8 +1,13 @@
 #!/bin/bash
+#Путь к файлу логов
 LOGFILE=/var/log/backup
+#Код с которым была завершена предыдущая команда. Если команда была выполнена удачно, то значение этой переменной будет 0, если же неудачно то не 0. 
 STATUS=$?
+#Первый парамт Backup Server второй Backup Patch
+BS=$1
+BP=$2
 
-
+#Вывод текущей даты и времени
 log(){
    message="$(date +"%y-%m-%d %T") $@"
    #echo $message
@@ -11,7 +16,7 @@ log(){
 
 >$LOGFILE
 
-log "Начало копирования файлов"
+log "Начало бэкапа"
 function main
 {
 if [[ $STATUS != 0 ]]; then
@@ -35,9 +40,25 @@ else
 	
 	log "Выгрузка базы"
 	/opt/alfresco-4.2.f/postgresql/bin/pg_dump -w -U alfresco alfresco> /backup/sql/$(date +"%y-%m-%d_%H-%M-%S").sql
-
 	if [[ $? != 0 ]]; then
 		log "Ошибка при копировании бызы"
+		exit
+	fi
+	
+	log "Копирование на удаленный сервер"
+	rsync -zvr /backup/ $BS::$BP
+	if [[ $? != 0 ]]; then
+		log "Ошибка при копировании на удаленный сервер"
+		exit
+	fi	
+	
+	log "Уждаляем все бэкапы кроме последнего"
+	cd /backup/files/
+	rm -f `ls -t --full-time | awk '{if (NR > 2)printf("%s ",$9);}'`
+	cd /backup/sql/
+	rm -f `ls -t --full-time | awk '{if (NR > 2)printf("%s ",$9);}'`
+	if [[ $? != 0 ]]; then
+		log "Ошибка при удалении бэкапов"
 		exit
 	fi
 	
@@ -52,4 +73,4 @@ fi
 
 main 2>&1 | tee -a $LOGFILE
 
-log "Окончание копирования файлов"
+log "Окончание Бэкапа"
