@@ -79,3 +79,7 @@ fi
 main 2>&1 | tee -a $LOGFILE
 
 log "Окончание Бэкапа"
+
+#Сокращаем лог файл
+tail -n 1000  $LOGFILE >/tmp/backup_log.tmp
+mv -f /tmp/backup_log.tmp $LOGFILE
