@@ -7,6 +7,9 @@ STATUS=$?
 BS=$1
 BP=$2
 
+#Директория скрипта
+DIRROOT=$(cd $(dirname $0) && pwd)
+
 #Вывод текущей даты и времени
 log(){
    message="$(date +"%y-%m-%d %T") $@"
@@ -14,7 +17,7 @@ log(){
    echo $message >>$LOGFILE
 }
 
->$LOGFILE
+#>$LOGFILE
 
 log "Начало бэкапа"
 function main
@@ -24,7 +27,7 @@ if [[ $STATUS != 0 ]]; then
 else	
 
 	log "Остановка tomcat"
-	cd /root/citeck/
+	cd $(DIRROOT)
 	/opt/alfresco-4.2.f/alfresco.sh stop tomcat
 	if [[ $? != 0 ]]; then
 		log "Ошибка при остановке tomcat"
@@ -64,7 +67,7 @@ else
 	fi
 	
 	log "Запуск tomcat"
-	cd /root/citeck/
+	cd $(DIRROOT)
 	/opt/alfresco-4.2.f/alfresco.sh start tomcat
 	if [[ $? != 0 ]]; then
 		log "Ошибка при запуске tomcat"
