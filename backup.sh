@@ -27,7 +27,7 @@ if [[ $STATUS != 0 ]]; then
 else	
 
 	log "Остановка tomcat"
-	cd $(DIRROOT)
+	cd $DIRROOT
 	/opt/alfresco-4.2.f/alfresco.sh stop tomcat
 	if [[ $? != 0 ]]; then
 		log "Ошибка при остановке tomcat"
@@ -67,7 +67,7 @@ else
 	fi
 	
 	log "Запуск tomcat"
-	cd $(DIRROOT)
+	cd $DIRROOT
 	/opt/alfresco-4.2.f/alfresco.sh start tomcat
 	if [[ $? != 0 ]]; then
 		log "Ошибка при запуске tomcat"
