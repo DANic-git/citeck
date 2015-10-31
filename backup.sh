@@ -1,6 +1,6 @@
 #!/bin/bash
 #Путь к файлу логов
-LOGFILE=/var/log/backup
+LOGFILE=/var/log/backup.log
 #Код с которым была завершена предыдущая команда. Если команда была выполнена удачно, то значение этой переменной будет 0, если же неудачно то не 0. 
 STATUS=$?
 #Первый парамт Backup Server второй Backup Patch
@@ -16,6 +16,11 @@ log(){
    #echo $message
    echo $message >>$LOGFILE
 }
+adddate() {
+    while IFS= read -r line; do
+        echo "$(date +"%y-%m-%d %T") $line"
+    done
+}
 
 #>$LOGFILE
 
@@ -28,7 +33,7 @@ else
 
 	log "Остановка tomcat"
 	cd $DIRROOT
-	/opt/alfresco-4.2.f/alfresco.sh stop tomcat
+	/opt/alfresco-4.2.f/alfresco.sh stop tomcat | adddate
 	if [[ $? != 0 ]]; then
 		log "Ошибка при остановке tomcat"
 		exit
@@ -36,21 +41,21 @@ else
 	
 	log "Копирование каталогов"
 	cd /opt/alfresco-4.2.f/
-	tar cfz /backup/files/$(date +"%y-%m-%d_%H-%M-%S").tar.gz --exclude='postgresql/*' ./alf_data
+	tar cfz /backup/files/$(date +"%y-%m-%d_%H-%M-%S").tar.gz --exclude='postgresql/*' ./alf_data | adddate
 	if [[ $? != 0 ]]; then
 		log "Ошибка при копировании каталогов"
 		exit
 	fi
 	
 	log "Выгрузка базы"
-	/opt/alfresco-4.2.f/postgresql/bin/pg_dump -w -U alfresco alfresco> /backup/sql/$(date +"%y-%m-%d_%H-%M-%S").sql
+	/opt/alfresco-4.2.f/postgresql/bin/pg_dump -w -U alfresco alfresco> /backup/sql/$(date +"%y-%m-%d_%H-%M-%S").sql | adddate
 	if [[ $? != 0 ]]; then
 		log "Ошибка при копировании бызы"
 		exit
 	fi
 	
 	log "Копирование на удаленный сервер"
-	rsync -zvr /backup/ $BS::$BP
+	rsync -zvr /backup/ $BS::$BP | adddate
 	if [[ $? != 0 ]]; then
 		log "Ошибка при копировании на удаленный сервер"
 		exit
@@ -68,7 +73,7 @@ else
 	
 	log "Запуск tomcat"
 	cd $DIRROOT
-	/opt/alfresco-4.2.f/alfresco.sh start tomcat
+	/opt/alfresco-4.2.f/alfresco.sh start tomcat | adddate
 	if [[ $? != 0 ]]; then
 		log "Ошибка при запуске tomcat"
 		exit
@@ -78,7 +83,7 @@ fi
 
 main 2>&1 | tee -a $LOGFILE
 
-log "Окончание Бэкапа"
+log "Успешное окончание Бэкапа"
 
 #Сокращаем лог файл
 tail -n 1000  $LOGFILE >/tmp/backup_log.tmp
