@@ -36,6 +36,12 @@ else
 	/opt/alfresco-4.2.f/alfresco.sh stop tomcat | adddate
 	if [[ $? != 0 ]]; then
 		log "Ошибка при остановке tomcat"
+		log "Запуск tomcat"
+			cd $DIRROOT
+			/opt/alfresco-4.2.f/alfresco.sh start tomcat | adddate
+			if [[ $? != 0 ]]; then
+				log "Ошибка при запуске tomcat"
+			fi		
 		exit
 	fi
 	
@@ -44,6 +50,12 @@ else
 	tar cfz /backup/files/$(date +"%y-%m-%d_%H-%M-%S").tar.gz --exclude='postgresql/*' ./alf_data | adddate
 	if [[ $? != 0 ]]; then
 		log "Ошибка при копировании каталогов"
+		log "Запуск tomcat"
+			cd $DIRROOT
+			/opt/alfresco-4.2.f/alfresco.sh start tomcat | adddate
+			if [[ $? != 0 ]]; then
+				log "Ошибка при запуске tomcat"
+			fi		
 		exit
 	fi
 	
@@ -51,8 +63,22 @@ else
 	/opt/alfresco-4.2.f/postgresql/bin/pg_dump -w -U alfresco alfresco> /backup/sql/$(date +"%y-%m-%d_%H-%M-%S").sql | adddate
 	if [[ $? != 0 ]]; then
 		log "Ошибка при копировании бызы"
+		log "Запуск tomcat"
+			cd $DIRROOT
+			/opt/alfresco-4.2.f/alfresco.sh start tomcat | adddate
+			if [[ $? != 0 ]]; then
+				log "Ошибка при запуске tomcat"
+			fi		
 		exit
 	fi
+	
+	log "Запуск tomcat"
+	cd $DIRROOT
+	/opt/alfresco-4.2.f/alfresco.sh start tomcat | adddate
+	if [[ $? != 0 ]]; then
+		log "Ошибка при запуске tomcat"
+		exit
+	fi	
 	
 	log "Копирование на удаленный сервер"
 	rsync -zvr /backup/ $BS::$BP | adddate
@@ -70,14 +96,6 @@ else
 		log "Ошибка при удалении бэкапов"
 		exit
 	fi
-	
-	log "Запуск tomcat"
-	cd $DIRROOT
-	/opt/alfresco-4.2.f/alfresco.sh start tomcat | adddate
-	if [[ $? != 0 ]]; then
-		log "Ошибка при запуске tomcat"
-		exit
-	fi	
 fi	
 }
 
