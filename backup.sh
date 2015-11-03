@@ -87,21 +87,28 @@ else
 		exit
 	fi	
 	
-	log "Уждаляем все бэкапы кроме последнего"
+	log "Удаляем все бэкапы кроме последнего"
 	cd /backup/files/
+	if [[ $? != 0 ]]; then
+		log "Нет каталога /backup/files/"
+		exit
+	fi
 	rm -f `ls -t --full-time | awk '{if (NR > 2)printf("%s ",$9);}'`
 	cd /backup/sql/
+	if [[ $? != 0 ]]; then
+		log "Нет каталога /backup/sql/"
+		exit
+	fi	
 	rm -f `ls -t --full-time | awk '{if (NR > 2)printf("%s ",$9);}'`
 	if [[ $? != 0 ]]; then
 		log "Ошибка при удалении бэкапов"
 		exit
 	fi
 fi	
+log "Успешное окончание Бэкапа"
 }
 
 main 2>&1 | tee -a $LOGFILE
-
-log "Успешное окончание Бэкапа"
 
 #Сокращаем лог файл
 tail -n 1000  $LOGFILE >/tmp/backup_log.tmp
