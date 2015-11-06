@@ -81,7 +81,7 @@ else
 	fi	
 	
 	log "Копирование на удаленный сервер"
-	rsync -zvr /backup/ $BS::$BP | adddate
+	rsync -zvr --exclude='weekly' /backup/ $BS::$BP | adddate
 	if [[ $? != 0 ]]; then
 		log "Ошибка при копировании на удаленный сервер"
 		exit
