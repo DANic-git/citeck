@@ -25,9 +25,10 @@ log "Начало бэкапа Jenkins"
 function main
 {
 
-if [[ $STATUS != 0 ]]; then
-	log "Произошла ошибка! Бэкап не удался"
-else	
+	if [[ $STATUS != 0 ]]; then
+		log "Произошла ошибка! Бэкап не удался"
+		exit
+	fi
 
 	log "архивирование в папку /backup/jenkins"
 	tar -cfz /backup/jenkins/$(date +"%y-%m-%d_%H-%M-%S").tar.gz /var/lib/jenkins/ | adddate
@@ -35,6 +36,7 @@ else
 		log "Ошибка при архивировании"
 		exit
 	fi	
+
 }
 
 main 2>&1 | tee -a $LOGFILE
