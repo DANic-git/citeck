@@ -31,7 +31,7 @@ function main
 	fi
 
 	log "архивирование в папку /backup/jenkins"
-	tar cfz /backup/jenkins/$(date +"%y-%m-%d_%H-%M-%S").tar.gz /var/lib/jenkins/ | adddate
+	tar cfz /backup/jenkins/$(date +"%Y%m%d.%H%M%S").tar.gz /var/lib/jenkins/ | adddate
 	if [[ $? != 0 ]]; then
 		log "Ошибка при архивировании"
 		exit

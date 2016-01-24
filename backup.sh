@@ -47,7 +47,7 @@ else
 	
 	log "Копирование каталогов"
 	cd /opt/alfresco-4.2.f/
-	tar cfz /backup/files/$(date +"%y-%m-%d_%H-%M-%S").tar.gz --exclude='postgresql/*' ./alf_data | adddate
+	tar cfz /backup/files/$(date +"%Y%m%d.%H%M%S").tar.gz --exclude='postgresql/*' ./alf_data | adddate
 	if [[ $? != 0 ]]; then
 		log "Ошибка при копировании каталогов"
 		log "Запуск tomcat"
