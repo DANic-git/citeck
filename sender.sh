@@ -32,14 +32,14 @@ if [[ $STATUS != 0 ]]; then
 else	
 
 	log "Копирование на удаленный сервер"
-	rsync -zvr /backup/$(echo $BP) $BS::$BP | adddate
+	rsync -zvr /backup/$(echo $BP)/ $BS::$BP | adddate
 	if [[ $? != 0 ]]; then
 		log "Ошибка при копировании на удаленный сервер"
 		exit
 	fi	
 	
 	log "Удаляем все бэкапы кроме последнего"
-	cd /backup/$(echo $BP)
+	cd /backup/$(echo $BP)/
 	if [[ $? != 0 ]]; then
 		log "Нет каталога /backup/$(echo $BP)"
 		exit
