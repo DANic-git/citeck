@@ -39,6 +39,15 @@ else
 	else
 	rm -f `ls -t --full-time | awk '{if (NR > 4)printf("%s ",$9);}'`
 	fi
+  
+	log "Удаляем бэкапы jenkins кроме последних трех"
+	cd /backup/jenkins/
+	if [[ $? != 0 ]]; then
+		log "Нет каталога /backup/"
+		exit
+	else
+	rm -f `ls -t --full-time | awk '{if (NR > 4)printf("%s ",$9);}'`
+	fi  
 	
 	log "Удаляем ежедневные бэкапы alfresco на citeck.ecos365.ru кроме последних четырех"
 	cd /backup/citeck.ecos365.ru/files/
