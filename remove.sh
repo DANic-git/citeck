@@ -37,7 +37,7 @@ else
 		log "Нет каталога /backup/"
 		exit
 	else
-	rm -f `ls -t --full-time | awk '{if (NR > 4)printf("%s ",$9);}'`
+	rm -f `ls -t --full-time | awk '{if (NR > 3)printf("%s ",$9);}'`
 	fi
   
 	log "Удаляем бэкапы jenkins кроме последних трех"
@@ -46,39 +46,39 @@ else
 		log "Нет каталога /backup/"
 		exit
 	else
-	rm -f `ls -t --full-time | awk '{if (NR > 4)printf("%s ",$9);}'`
+	rm -f `ls -t --full-time | awk '{if (NR > 3)printf("%s ",$9);}'`
 	fi  
 	
-	log "Удаляем ежедневные бэкапы alfresco на citeck.ecos365.ru кроме последних четырех"
+	log "Удаляем ежедневные бэкапы alfresco на citeck.ecos365.ru кроме последних двух"
 	cd /backup/citeck.ecos365.ru/files/
 	if [[ $? != 0 ]]; then
 		log "Нет каталога /backup/citeck.ecos365.ru/files/"
 		exit
 	else
-	rm -f `ls -t --full-time | awk '{if (NR > 4)printf("%s ",$9);}'`
+	rm -f `ls -t --full-time | awk '{if (NR > 3)printf("%s ",$9);}'`
 	fi
 	cd /backup/citeck.ecos365.ru/sql/
 	if [[ $? != 0 ]]; then
 		log "Нет каталога /backup/citeck.ecos365.ru/sql/"
 		exit
 	else
-	rm -f `ls -t --full-time | awk '{if (NR > 4)printf("%s ",$9);}'`
+	rm -f `ls -t --full-time | awk '{if (NR > 3)printf("%s ",$9);}'`
 	fi
 
-	log "Удаляем еженедельные бэкапы alfresco на citeck.ecos365.ru кроме последних трех"
+	log "Удаляем еженедельные бэкапы alfresco на citeck.ecos365.ru кроме последних двух"
 	cd /backup/citeck.ecos365.ru/weekly/files/
 	if [[ $? != 0 ]]; then
 		log "Нет каталога /backup/citeck.ecos365.ru/weekly/files/"
 		exit
 	else
-	rm -f `ls -t --full-time | awk '{if (NR > 4)printf("%s ",$9);}'`		
+	rm -f `ls -t --full-time | awk '{if (NR > 3)printf("%s ",$9);}'`		
 	fi
 	cd /backup/citeck.ecos365.ru/weekly/sql/
 	if [[ $? != 0 ]]; then
 		log "Нет каталога /backup/citeck.ecos365.ru/weekly/sql/"
 		exit
 	else
-	rm -f `ls -t --full-time | awk '{if (NR > 4)printf("%s ",$9);}'`	
+	rm -f `ls -t --full-time | awk '{if (NR > 3)printf("%s ",$9);}'`	
 	fi
 	
 fi	
